@@ -683,3 +683,257 @@ textarea:focus {
     0% { transform: scale(0.9); opacity: 0.7; }
     100% { transform: scale(1.2); opacity: 1; }
 }
+
+/* ==========================================================================
+   MOBILE APP EXPERIENCE (≤768px)
+   Bottom nav + tab switching. Desktop is completely unchanged.
+   ========================================================================== */
+
+/* Bottom nav — hidden on desktop */
+.mobile-bottom-nav {
+    display: none;
+}
+
+/* Header tweaks for mobile */
+@media (max-width: 768px) {
+    /* PWA full-screen feel */
+    body {
+        overscroll-behavior: none;
+    }
+
+    .container {
+        padding: 0.75rem 0.75rem calc(72px + env(safe-area-inset-bottom));
+        gap: 0.75rem;
+    }
+
+    /* Compact header */
+    header {
+        padding: 0.75rem 1rem;
+        border-radius: 16px;
+        flex-wrap: nowrap;
+        gap: 0.5rem;
+    }
+
+    .logo-icon {
+        font-size: 1.6rem;
+    }
+
+    .logo-text h1 {
+        font-size: 1.1rem;
+    }
+
+    .logo-subtitle {
+        display: none;
+    }
+
+    .user-control-header {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        flex-wrap: nowrap;
+    }
+
+    .status-indicator-wrapper {
+        padding: 0.4rem 0.75rem;
+        gap: 0.5rem;
+    }
+
+    .status-text {
+        font-size: 0.75rem;
+    }
+
+    /* Hide the username badge on mobile to save space */
+    .user-control-header .status-indicator-wrapper:nth-child(2) {
+        display: none;
+    }
+
+    /* Logout button icon-only */
+    .btn-icon {
+        padding: 0.5rem 0.65rem;
+        border-radius: 50%;
+        height: 36px;
+        width: 36px;
+        min-width: 36px;
+    }
+
+    /* Stats grid: 3 compact cards in a row */
+    .stats-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.6rem;
+    }
+
+    .stat-card {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        padding: 0.85rem 0.5rem;
+        gap: 0.5rem;
+    }
+
+    .stat-card .card-icon {
+        font-size: 1.2rem;
+        width: 38px;
+        height: 38px;
+        border-radius: 10px;
+    }
+
+    .stat-card .card-content h3 {
+        font-size: 0.65rem;
+    }
+
+    .stat-card .card-content p {
+        font-size: 0.95rem;
+    }
+
+    /* Dashboard grid: single column */
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+    }
+
+    /* Tab content: hidden by default on mobile, shown when active */
+    [data-tab-section] {
+        display: none !important;
+    }
+
+    [data-tab-section].tab-active {
+        display: flex !important;
+    }
+
+    /* Stats always flex */
+    .stats-grid[data-tab-section] {
+        display: none !important;
+    }
+    .stats-grid[data-tab-section].tab-active {
+        display: grid !important;
+    }
+
+    /* Panel-section flex direction */
+    .panel-section[data-tab-section] {
+        display: none !important;
+    }
+    .panel-section[data-tab-section].tab-active {
+        display: flex !important;
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    /* Control card inside config section hidden on mobile */
+    .control-card[data-tab-section] {
+        display: none !important;
+    }
+    .control-card[data-tab-section].tab-active {
+        display: block !important;
+    }
+
+    /* Cards padding reduction */
+    .control-card, .config-card, .terminal-card {
+        padding: 1.25rem;
+    }
+
+    h2 {
+        font-size: 1.05rem;
+        margin-bottom: 1rem;
+    }
+
+    /* Full-width action buttons */
+    .control-actions {
+        flex-direction: column;
+    }
+
+    .control-actions .btn {
+        width: 100%;
+        padding: 1rem;
+        font-size: 1rem;
+        border-radius: 14px;
+    }
+
+    /* Terminal height on mobile */
+    .terminal-body {
+        min-height: 300px;
+        max-height: calc(100dvh - 280px);
+        font-size: 0.78rem;
+    }
+
+    .terminal-card {
+        min-height: unset;
+    }
+
+    /* Toasts above nav bar */
+    .toast-container {
+        bottom: calc(80px + env(safe-area-inset-bottom));
+        right: 1rem;
+        left: 1rem;
+        max-width: 100%;
+    }
+
+    /* Bottom Navigation Bar */
+    .mobile-bottom-nav {
+        display: flex;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: calc(64px + env(safe-area-inset-bottom));
+        padding-bottom: env(safe-area-inset-bottom);
+        background: rgba(12, 15, 22, 0.97);
+        border-top: 1px solid var(--border-color);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        z-index: 100;
+        align-items: stretch;
+        justify-content: space-around;
+    }
+
+    .mobile-nav-btn {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+        background: none;
+        border: none;
+        color: var(--color-text-muted);
+        font-family: var(--font-ui);
+        font-size: 0.7rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: color var(--transition-fast);
+        padding: 0.5rem;
+        position: relative;
+    }
+
+    .mobile-nav-btn i {
+        font-size: 1.25rem;
+        transition: transform var(--transition-fast), color var(--transition-fast);
+    }
+
+    .mobile-nav-btn.active {
+        color: var(--color-kick);
+    }
+
+    .mobile-nav-btn.active i {
+        transform: translateY(-2px);
+        text-shadow: 0 0 10px var(--color-kick-glow);
+    }
+
+    .mobile-nav-btn.active::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 32px;
+        height: 3px;
+        background: var(--color-kick);
+        border-radius: 0 0 4px 4px;
+        box-shadow: 0 0 8px var(--color-kick);
+    }
+
+    /* Form rows stack on mobile */
+    .form-row-grid {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+}

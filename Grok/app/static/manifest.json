@@ -1,0 +1,22 @@
+{
+    "name": "Kick Timer Bot",
+    "short_name": "KickBot",
+    "description": "Panel de control para el bot de Kick.com",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#0c0f16",
+    "theme_color": "#53fc18",
+    "orientation": "portrait-primary",
+    "icons": [
+        {
+            "src": "https://cdn-icons-png.flaticon.com/512/4712/4712035.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "https://cdn-icons-png.flaticon.com/512/4712/4712035.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+}

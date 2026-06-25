@@ -571,4 +571,73 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Polling del estado del bot cada 3 segundos
     setInterval(loadStatus, 3000);
+
+    // =========================================================
+    // MOBILE TAB NAVIGATION
+    // Only activates on screens ≤768px; desktop is untouched.
+    // =========================================================
+    const MOBILE_BREAKPOINT = 768;
+
+    function isMobile() {
+        return window.innerWidth <= MOBILE_BREAKPOINT;
+    }
+
+    // Map each tab name to the data-tab-section elements it should show.
+    // "estado" shows: stats-grid + control-card
+    // "config"  shows: panel-section (left column, minus control-card)
+    // "consola" shows: terminal-section
+    const tabMap = {
+        estado:  () => document.querySelectorAll('.stats-grid[data-tab-section], .control-card[data-tab-section]'),
+        config:  () => document.querySelectorAll('.panel-section[data-tab-section]'),
+        consola: () => document.querySelectorAll('.terminal-section[data-tab-section]'),
+    };
+
+    function activateMobileTab(tabName) {
+        // Hide all tab sections
+        document.querySelectorAll('[data-tab-section]').forEach(el => {
+            el.classList.remove('tab-active');
+        });
+
+        // Show the selected tab sections
+        const targets = tabMap[tabName];
+        if (targets) {
+            targets().forEach(el => el.classList.add('tab-active'));
+        }
+
+        // Update nav button states
+        document.querySelectorAll('.mobile-nav-btn').forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.tab === tabName);
+        });
+
+        // Scroll content area to top on tab switch
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function initMobileNav() {
+        if (!isMobile()) return;
+        // Activate default tab
+        activateMobileTab('estado');
+        // Wire nav buttons
+        document.querySelectorAll('.mobile-nav-btn').forEach(btn => {
+            btn.addEventListener('click', () => activateMobileTab(btn.dataset.tab));
+        });
+    }
+
+    // Re-evaluate on resize (handles rotation / DevTools toggle)
+    let mobileNavInitialized = false;
+    function handleResize() {
+        if (isMobile() && !mobileNavInitialized) {
+            mobileNavInitialized = true;
+            initMobileNav();
+        } else if (!isMobile()) {
+            // Remove tab-active classes so desktop CSS takes over
+            document.querySelectorAll('[data-tab-section]').forEach(el => {
+                el.classList.remove('tab-active');
+            });
+            mobileNavInitialized = false;
+        }
+    }
+
+    window.addEventListener('resize', handleResize);
+    handleResize(); // run on load
 });

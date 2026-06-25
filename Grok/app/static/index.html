@@ -2,8 +2,14 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#53fc18">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="KickBot">
     <title>Kick Chat Bot Dashboard</title>
+    <link rel="manifest" href="/static/manifest.json">
     <!-- Google Fonts: Outfit for UI, JetBrains Mono for Console logs -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -21,10 +27,10 @@
                 <i class="fa-solid fa-robot logo-icon"></i>
                 <div class="logo-text">
                     <h1>KICK <span>Timer Bot</span></h1>
-                    <p>Panel de Control y Automatización</p>
+                    <p class="logo-subtitle">Panel de Control y Automatización</p>
                 </div>
             </div>
-            <div class="user-control-header" style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+            <div class="user-control-header">
                 <div class="status-indicator-wrapper">
                     <span id="bot-status-text" class="status-text">Detenido</span>
                     <span id="bot-status-dot" class="status-dot"></span>
@@ -33,14 +39,14 @@
                     <i class="fa-solid fa-user" style="color: var(--color-kick);"></i>
                     <span id="username-display" style="font-weight: 600; margin-left: 0.25rem; text-transform: capitalize;">Cargando...</span>
                 </div>
-                <button id="btn-logout" class="btn btn-secondary" style="padding: 0.5rem 0.75rem; border-radius: 30px; font-size: 0.85rem; height: 36px;" title="Cerrar Sesión">
+                <button id="btn-logout" class="btn btn-secondary btn-icon" title="Cerrar Sesión">
                     <i class="fa-solid fa-right-from-bracket"></i>
                 </button>
             </div>
         </header>
 
-        <!-- Stats Cards Grid -->
-        <section class="stats-grid">
+        <!-- Stats Cards Grid — visible on all tabs on mobile (tab: estado) -->
+        <section class="stats-grid" data-tab-section="estado">
             <div class="card stat-card" id="card-status">
                 <div class="card-icon"><i class="fa-solid fa-power-off"></i></div>
                 <div class="card-content">
@@ -67,9 +73,9 @@
         <!-- Main Dashboard Content -->
         <main class="dashboard-grid">
             <!-- Left Side: Controls & Config -->
-            <section class="panel-section">
-                <!-- Controls Card -->
-                <div class="card control-card">
+            <section class="panel-section" data-tab-section="config">
+                <!-- Controls Card — on mobile shown in "estado" tab -->
+                <div class="card control-card" data-tab-section="estado">
                     <h2><i class="fa-solid fa-sliders"></i> Controles del Bot</h2>
                     <div class="control-actions">
                         <button id="btn-start" class="btn btn-primary" disabled>
@@ -218,7 +224,7 @@
             </section>
 
             <!-- Right Side: Terminal Logs -->
-            <section class="panel-section terminal-section">
+            <section class="panel-section terminal-section" data-tab-section="consola">
                 <div class="card terminal-card">
                     <div class="terminal-header">
                         <div class="terminal-title">
@@ -243,6 +249,22 @@
 
     <!-- Alert Banner / Toasts Container -->
     <div id="toast-container" class="toast-container"></div>
+
+    <!-- Mobile Bottom Navigation Bar -->
+    <nav class="mobile-bottom-nav" id="mobile-bottom-nav">
+        <button class="mobile-nav-btn active" data-tab="estado">
+            <i class="fa-solid fa-house"></i>
+            <span>Estado</span>
+        </button>
+        <button class="mobile-nav-btn" data-tab="config">
+            <i class="fa-solid fa-gear"></i>
+            <span>Config</span>
+        </button>
+        <button class="mobile-nav-btn" data-tab="consola">
+            <i class="fa-solid fa-terminal"></i>
+            <span>Consola</span>
+        </button>
+    </nav>
 
     <script src="/static/index.js"></script>
 </body>
