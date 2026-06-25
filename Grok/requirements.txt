@@ -1,0 +1,14 @@
+# Dependencias recomendadas para el bot de Kick
+
+# Versión recomendada (OAuth + librería moderna)
+kickcom.py>=1.0
+
+# Para la versión simple (requests)
+requests>=2.31.0
+
+# Servidor web e interfaz gráfica
+fastapi>=0.110.0
+uvicorn>=0.28.0
+
+# Opcional pero recomendado
+python-dotenv>=1.0.0

@@ -1,0 +1,11 @@
+services:
+  kick-bot:
+    build: .
+    container_name: kick-timer-bot
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./data:/data
+    environment:
+      - CONFIG_DIR=/data

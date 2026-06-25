@@ -1,0 +1,44 @@
+{
+    "admin": {
+        "username": "beat",
+        "password_hash": "cd49b44254ee7a567f7b04ac3f23472d1be44c94c8146aa14c65f8d6d6085f4b",
+        "salt": "90e04625ef6a83981f1af74c436e07f6",
+        "is_admin": true
+    },
+    "demo": {
+        "username": "demo",
+        "password_hash": "5f77f925a1433c8bb273aec12a985b267d9ab237cb6f0297c6f3814b06713317",
+        "salt": "822221e9c6fcda42db28b00fd6e7458b",
+        "is_admin": false
+    },
+    "beat": {
+        "username": "beat",
+        "password_hash": "e49d5621aef9efb7eae5f1588793b79c6c0bb01f4ebc68dce1f6bd76550e62b1",
+        "salt": "2ea8d85f4382a1b55e95c5b4ffe58ac5",
+        "is_admin": false
+    },
+    "lecuetestuser": {
+        "username": "lecuetestuser",
+        "password_hash": "0645dd47d62b956111781b1a092fb2199b38d90cf9c27c31dc0f44e30a2e0f62",
+        "salt": "f4fb161291dfc0192aefdb15f037a048",
+        "is_admin": false
+    },
+    "testuser": {
+        "username": "testuser",
+        "password_hash": "a35cd982c29a0b40b1c83c380a741f34e3cda3fe683d1539183c8527e40aa46a",
+        "salt": "a9d7ab90e4cfa0318ce96d74a3c63eb6",
+        "is_admin": false
+    },
+    "lecu": {
+        "username": "lecu",
+        "password_hash": "4b95649e9503d6b2ace24efdb5d241e9fc2b5b2019e1ca90292766eccb4bb422",
+        "salt": "77df2c962f445f07b34ac1ca4b7a9a35",
+        "is_admin": false
+    },
+    "testuser3": {
+        "username": "testuser3",
+        "password_hash": "a18bfad43a8e0240ec4fd3c139b9216d30c5662c221d99945a6a7cdb1dbdb791",
+        "salt": "82f311361b3c645e6f6f10800e3b5e88",
+        "is_admin": false
+    }
+}

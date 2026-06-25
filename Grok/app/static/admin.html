@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HACKER DASHBOARD - Kick Bot Admin</title>
+    <!-- Google Fonts: JetBrains Mono for all Terminal text, Outfit for labels -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/static/index.css">
+    <style>
+        /* Estilo Hacker Personalizado para Admin Panel */
+        :root {
+            --hacker-green: #39ff14;
+            --hacker-green-glow: rgba(57, 255, 20, 0.25);
+            --hacker-cyan: #00f0ff;
+            --hacker-bg: #030407;
+            --hacker-card-bg: rgba(7, 10, 17, 0.85);
+            --hacker-border: rgba(57, 255, 20, 0.2);
+            --hacker-border-focus: rgba(57, 255, 20, 0.6);
+        }
+
+        body.admin-body {
+            background-color: var(--hacker-bg);
+            color: #d1ffd6;
+            font-family: var(--font-ui);
+        }
+
+        /* Ambient scanlines/glow */
+        .scanlines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                rgba(18, 16, 16, 0) 50%, 
+                rgba(0, 0, 0, 0.25) 50%
+            ), linear-gradient(
+                90deg, 
+                rgba(255, 0, 0, 0.06), 
+                rgba(0, 255, 0, 0.02), 
+                rgba(0, 0, 255, 0.06)
+            );
+            background-size: 100% 4px, 6px 100%;
+            z-index: 9999;
+            pointer-events: none;
+            opacity: 0.3;
+        }
+
+        .cyber-header {
+            border: 1px solid var(--hacker-border);
+            background: var(--hacker-card-bg);
+            box-shadow: 0 0 20px var(--hacker-green-glow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cyber-header::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--hacker-green), transparent);
+            animation: cyber-scan 3s infinite linear;
+        }
+
+        @keyframes cyber-scan {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .hacker-terminal {
+            background: #000000 !important;
+            border: 1px solid var(--hacker-green) !important;
+            box-shadow: 0 0 15px rgba(57, 255, 20, 0.15) inset, 0 5px 25px rgba(0,0,0,0.8);
+            font-family: var(--font-mono);
+            border-radius: 12px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 600px;
+        }
+
+        .hacker-terminal .terminal-header {
+            background: #080c09;
+            border-bottom: 1px solid rgba(57, 255, 20, 0.3);
+            color: var(--hacker-green);
+        }
+
+        .hacker-terminal .terminal-body {
+            background: #000000;
+            color: #5eff7a;
+            padding: 1.5rem;
+            position: relative;
+        }
+
+        /* Matrix-like line items */
+        .hacker-terminal .log-line {
+            border: none;
+            padding-left: 0;
+            margin-bottom: 0.25rem;
+            text-shadow: 0 0 2px rgba(57, 255, 20, 0.5);
+        }
+
+        .hacker-terminal .log-info { color: #83ff99; }
+        .hacker-terminal .log-success { color: var(--hacker-green); font-weight: bold; }
+        .hacker-terminal .log-error { color: #ff5555; text-shadow: 0 0 5px rgba(255, 85, 85, 0.5); }
+        .hacker-terminal .log-warning { color: #ffff55; }
+        .hacker-terminal .log-system { color: #00bfff; }
+
+        /* Flashing cursor */
+        .terminal-cursor {
+            display: inline-block;
+            width: 8px;
+            height: 15px;
+            background: var(--hacker-green);
+            margin-left: 5px;
+            animation: blinkCursor 0.8s infinite steps(2);
+            vertical-align: middle;
+        }
+
+        @keyframes blinkCursor {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 1; }
+        }
+
+        /* Hacker Monitor Grid */
+        .bot-monitor-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.25rem;
+        }
+
+        .bot-monitor-card {
+            border: 1px solid var(--hacker-border);
+            background: var(--hacker-card-bg);
+            transition: var(--transition-normal);
+        }
+
+        .bot-monitor-card:hover {
+            border-color: var(--hacker-green);
+            box-shadow: 0 0 15px var(--hacker-green-glow);
+            transform: translateY(-2px);
+        }
+
+        .bot-status-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            padding-bottom: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .bot-name {
+            font-size: 1.1rem;
+            font-weight: 700;
+            text-transform: capitalize;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .bot-value {
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            color: #a3ffd0;
+        }
+
+        /* Cyberpunk inputs */
+        .cyber-input {
+            border: 1px solid var(--hacker-border) !important;
+            background: rgba(0, 0, 0, 0.6) !important;
+        }
+
+        .cyber-input:focus {
+            border-color: var(--hacker-green) !important;
+            box-shadow: 0 0 8px var(--hacker-green-glow) !important;
+        }
+
+        /* Button hacker styles */
+        .btn-hacker-primary {
+            background: transparent;
+            border: 1px solid var(--hacker-green);
+            color: var(--hacker-green);
+        }
+
+        .btn-hacker-primary:hover {
+            background: var(--hacker-green);
+            color: #000;
+            box-shadow: 0 0 15px var(--hacker-green);
+        }
+
+        .btn-hacker-danger {
+            background: transparent;
+            border: 1px solid var(--color-danger);
+            color: var(--color-danger);
+        }
+
+        .btn-hacker-danger:hover {
+            background: var(--color-danger);
+            color: #fff;
+            box-shadow: 0 0 15px var(--color-danger);
+        }
+
+        /* Title style */
+        .hacker-title-glow {
+            text-shadow: 0 0 10px var(--hacker-green-glow);
+            color: #ffffff;
+        }
+
+        .hacker-title-glow span {
+            color: var(--hacker-green);
+            text-shadow: 0 0 15px var(--hacker-green);
+        }
+
+        .cyber-table th {
+            color: var(--hacker-green);
+            border-bottom: 1px solid var(--hacker-border);
+        }
+    </style>
+</head>
+<body class="admin-body">
+    <div class="scanlines"></div>
+    <div class="glow-bg"></div>
+    <div class="container">
+        
+        <!-- Header -->
+        <header class="cyber-header">
+            <div class="logo-area">
+                <i class="fa-solid fa-terminal logo-icon" style="color: var(--hacker-green); text-shadow: 0 0 15px var(--hacker-green);"></i>
+                <div class="logo-text">
+                    <h1 class="hacker-title-glow">ROOT_ACCESS@<span>KickTimerBot</span></h1>
+                    <p style="color: var(--hacker-green);">Consola de Monitoreo Centralizada e Inicios de Sesión</p>
+                </div>
+            </div>
+            <div class="user-control-header" style="display: flex; align-items: center; gap: 1rem;">
+                <div class="status-indicator-wrapper" style="border-color: var(--hacker-green); background: rgba(0,0,0,0.4);">
+                    <i class="fa-solid fa-shield-halved" style="color: var(--hacker-green);"></i>
+                    <span style="font-weight: 700; color: var(--hacker-green); font-family: var(--font-mono);">ROLE: ADMIN</span>
+                </div>
+                <div class="status-indicator-wrapper" style="background: rgba(255, 255, 255, 0.02); border-color: rgba(255,255,255,0.05);">
+                    <i class="fa-solid fa-user-secret" style="color: var(--hacker-cyan);"></i>
+                    <span id="username-display" style="font-weight: 600; margin-left: 0.25rem; text-transform: capitalize; color: #fff;">admin</span>
+                </div>
+                <button id="btn-logout" class="btn btn-secondary" style="padding: 0.5rem 0.75rem; border-radius: 30px; font-size: 0.85rem; height: 36px; border-color: var(--hacker-border);" title="Cerrar Sesión">
+                    <i class="fa-solid fa-power-off" style="color: var(--color-danger);"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- Dynamic Bots Monitoring Grid -->
+        <section>
+            <h2 class="hacker-title-glow" style="margin-bottom: 1rem;"><i class="fa-solid fa-display" style="color: var(--hacker-green);"></i> MONITOREO DE BOTS ACTIVOS</h2>
+            <div id="bot-monitor-grid" class="bot-monitor-grid">
+                <!-- Se poblará dinámicamente -->
+                <div style="grid-column: 1/-1; text-align: center; padding: 2rem; color: var(--color-text-muted);">
+                    <i class="fa-solid fa-spinner fa-spin" style="font-size: 2rem; margin-bottom: 0.5rem;"></i>
+                    <p>Escaneando red de bots...</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Main Dashboard Content -->
+        <main class="dashboard-grid">
+            
+            <!-- Left Side: User management & System action -->
+            <section class="panel-section">
+                <!-- User creation form -->
+                <div class="card config-card bot-monitor-card">
+                    <h2 class="hacker-title-glow" style="color: #ffffff;"><i class="fa-solid fa-user-plus" style="color: var(--hacker-green);"></i> REGISTRAR NUEVA CUENTA</h2>
+                    <form id="admin-user-form" onsubmit="event.preventDefault();">
+                        <div class="form-row-grid">
+                            <div class="form-group">
+                                <label for="admin_new_username" style="color: #a3ffd0;">Username</label>
+                                <input type="text" id="admin_new_username" class="cyber-input" placeholder="Usuario" required autocomplete="off">
+                            </div>
+                            <div class="form-group">
+                                <label for="admin_new_password" style="color: #a3ffd0;">Password</label>
+                                <input type="password" id="admin_new_password" class="cyber-input" placeholder="Contraseña" required autocomplete="off">
+                            </div>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1.25rem;">
+                            <input type="checkbox" id="admin_is_admin" style="accent-color: var(--hacker-green); width: 18px; height: 18px; cursor: pointer;">
+                            <label for="admin_is_admin" style="cursor: pointer; user-select: none; color: #a3ffd0;">Otorgar privilegios de administrador</label>
+                        </div>
+                        <button type="submit" id="btn-create-user" class="btn btn-hacker-primary btn-block">
+                            <i class="fa-solid fa-code-merge"></i> INYECTAR USUARIO
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Active users table -->
+                <div class="card config-card bot-monitor-card">
+                    <h2 class="hacker-title-glow" style="color: #ffffff;"><i class="fa-solid fa-users" style="color: var(--hacker-green);"></i> LISTA DE SESIONES</h2>
+                    <div class="admin-table-wrapper" style="max-height: 250px; overflow-y: auto; background: rgba(0,0,0,0.4); border-radius: 12px; border: 1px solid var(--hacker-border); padding: 0.5rem;">
+                        <table class="cyber-table" style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.85rem;">
+                            <thead>
+                                <tr style="border-bottom: 1px solid var(--hacker-border); color: var(--hacker-green);">
+                                    <th style="padding: 0.6rem;">Usuario</th>
+                                    <th style="padding: 0.6rem;">Nivel</th>
+                                    <th style="padding: 0.6rem;">IP Terminal</th>
+                                    <th style="padding: 0.6rem; text-align: right;">Eliminar</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-users-list" style="font-family: var(--font-mono);">
+                                <!-- Cargado dinámicamente -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Right Side: Hacker Console Logs -->
+            <section class="panel-section terminal-section">
+                <div class="card hacker-terminal">
+                    <div class="terminal-header">
+                        <div class="terminal-title">
+                            <i class="fa-solid fa-terminal"></i> CONSOLA_DE_RED@ROOT (TIEMPO REAL)
+                        </div>
+                        <div class="terminal-actions">
+                            <button id="btn-clear-logs" class="btn-terminal-action" style="border-color: var(--hacker-border); color: var(--hacker-green);" title="Limpiar Terminal">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
+                            <button id="btn-scroll-toggle" class="btn-terminal-action active" style="border-color: var(--hacker-border); color: var(--hacker-green);" title="Auto-scroll">
+                                <i class="fa-solid fa-angles-down"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div id="terminal-body" class="terminal-body">
+                        <div class="log-line log-system">> Inicializando consola de monitoreo global...</div>
+                        <div class="log-line log-system">> Conectando al canal de logs del servidor...</div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Alert Banner / Toasts Container -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <script src="/static/admin.js"></script>
+</body>
+</html>
