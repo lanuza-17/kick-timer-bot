@@ -689,6 +689,70 @@ textarea:focus {
    Bottom nav + tab switching. Desktop is completely unchanged.
    ========================================================================== */
 
+/* ==========================================================================
+   CUSTOM CONFIRM MODAL (replaces blocked browser confirm() in iframes)
+   ========================================================================== */
+.confirm-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(6px);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    animation: fadeInOverlay 0.15s ease;
+}
+
+@keyframes fadeInOverlay {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+.confirm-modal {
+    background: rgba(18, 24, 38, 0.98);
+    border: 1px solid var(--border-color);
+    border-top: 3px solid var(--color-danger);
+    border-radius: 20px;
+    padding: 2rem;
+    max-width: 420px;
+    width: 100%;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+    animation: slideInModal 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes slideInModal {
+    from { opacity: 0; transform: scale(0.9) translateY(10px); }
+    to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.confirm-modal-icon {
+    font-size: 2rem;
+    color: var(--color-danger);
+    margin-bottom: 0.75rem;
+    display: block;
+    text-align: center;
+}
+
+.confirm-modal-message {
+    font-size: 0.95rem;
+    color: var(--color-text-main);
+    line-height: 1.6;
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.confirm-modal-actions {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: flex-end;
+}
+
+.confirm-modal-actions .btn {
+    flex: 1;
+}
+
 /* Bottom nav — hidden on desktop */
 .mobile-bottom-nav {
     display: none;

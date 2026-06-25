@@ -69,6 +69,28 @@ document.addEventListener("DOMContentLoaded", () => {
     let sseSource = null;
     let userTemplates = {}; // Diccionario local cargado desde la configuración del usuario
 
+    // Custom confirm modal (browser confirm() is blocked inside iframes)
+    function customConfirm(message) {
+        return new Promise(resolve => {
+            const overlay = document.createElement("div");
+            overlay.className = "confirm-overlay";
+            overlay.innerHTML = `
+                <div class="confirm-modal">
+                    <i class="fa-solid fa-triangle-exclamation confirm-modal-icon"></i>
+                    <p class="confirm-modal-message">${message}</p>
+                    <div class="confirm-modal-actions">
+                        <button class="btn btn-secondary confirm-cancel">Cancelar</button>
+                        <button class="btn btn-danger confirm-ok">Confirmar</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(overlay);
+            overlay.querySelector(".confirm-ok").addEventListener("click", () => { overlay.remove(); resolve(true); });
+            overlay.querySelector(".confirm-cancel").addEventListener("click", () => { overlay.remove(); resolve(false); });
+            overlay.addEventListener("click", e => { if (e.target === overlay) { overlay.remove(); resolve(false); } });
+        });
+    }
+
     // Toast de notificación
     function showToast(message, type = "info") {
         const toast = document.createElement("div");
@@ -182,7 +204,8 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        if (confirm(`¿Estás seguro de que quieres eliminar la plantilla "${name}"?`)) {
+        const confirmed = await customConfirm(`¿Eliminar la plantilla "<strong>${name}</strong>"?`);
+        if (confirmed) {
             delete userTemplates[name];
             await saveTemplatesToServer();
             renderTemplateSelect();
@@ -441,9 +464,10 @@ document.addEventListener("DOMContentLoaded", () => {
     btnLogout.addEventListener("click", async () => {
         try {
             await fetch("/api/auth/logout", { method: "POST" });
-            window.location.href = "/static/login.html";
         } catch (err) {
             console.error("Error al cerrar sesión", err);
+        } finally {
+            window.location.href = "/static/login.html";
         }
     });
 
@@ -501,21 +525,21 @@ document.addEventListener("DOMContentLoaded", () => {
             document.querySelectorAll(".btn-delete-user").forEach(btn => {
                 btn.addEventListener("click", async () => {
                     const targetUser = btn.getAttribute("data-username");
-                    if (confirm(`¿Estás seguro de que quieres eliminar al usuario "${targetUser}"? Se detendrá su bot si está activo.`)) {
-                        try {
-                            const res = await fetch(`/api/admin/users/${targetUser}`, {
-                                method: "DELETE"
-                            });
-                            if (res.ok) {
-                                showToast(`Usuario "${targetUser}" eliminado`, "info");
-                                loadAdminUsersList();
-                            } else {
-                                const errData = await res.json();
-                                showToast(errData.detail || "Error al eliminar usuario", "danger");
-                            }
-                        } catch (err) {
-                            showToast("Fallo de red al eliminar", "danger");
+                    const confirmed = await customConfirm(`¿Eliminar al usuario "<strong>${targetUser}</strong>"? Se detendrá su bot si está activo.`);
+                    if (!confirmed) return;
+                    try {
+                        const res = await fetch(`/api/admin/users/${targetUser}`, {
+                            method: "DELETE"
+                        });
+                        if (res.ok) {
+                            showToast(`Usuario "${targetUser}" eliminado`, "info");
+                            loadAdminUsersList();
+                        } else {
+                            const errData = await res.json();
+                            showToast(errData.detail || "Error al eliminar usuario", "danger");
                         }
+                    } catch (err) {
+                        showToast("Fallo de red al eliminar", "danger");
                     }
                 });
             });
