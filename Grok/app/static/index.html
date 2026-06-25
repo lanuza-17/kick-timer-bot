@@ -126,6 +126,21 @@
                     <form id="config-form" onsubmit="event.preventDefault();">
                         <div class="form-row-grid">
                             <div class="form-group">
+                                <label for="client_id">Client ID</label>
+                                <input type="text" id="client_id" placeholder="Tu Client ID de Kick" autocomplete="off">
+                            </div>
+                            <div class="form-group">
+                                <label for="client_secret">Client Secret</label>
+                                <div style="display: flex; gap: 0.5rem; align-items: center;">
+                                    <input type="password" id="client_secret" placeholder="Tu Client Secret de Kick" autocomplete="off" style="flex: 1;">
+                                    <button type="button" id="btn-toggle-secret" class="btn btn-secondary" style="padding: 0.75rem; border-radius: 12px; height: 48px; min-width: 48px;" title="Mostrar/Ocultar Secret">
+                                        <i class="fa-solid fa-eye"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row-grid">
+                            <div class="form-group">
                                 <label for="channel_slug">Canal Objetivo (Slug)</label>
                                 <select id="channel_slug" style="background: rgba(0, 0, 0, 0.3); border: 1px solid var(--border-color); border-radius: 12px; padding: 0.75rem 1rem; color: #fff; font-family: var(--font-ui); font-size: 0.95rem; outline: none; width: 100%; transition: var(--transition-fast);">
                                     <option value="kashee_teamcosta">kashee_teamcosta</option>
